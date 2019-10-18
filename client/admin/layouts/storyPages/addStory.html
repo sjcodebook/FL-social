@@ -1,0 +1,292 @@
+<template name="addStory">
+  {{#if is_allowed 'Story Management'}}
+  <div class="app-main__inner">
+    <div class="app-page-title  contentCenter">
+      <div class="page-title-wrapper inlineContent">
+        <div class="page-title-heading">
+          <i class="fa fa-plus-square mr-2"></i>
+          ADD STORY
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          {{#if Template.subscriptionsReady}}
+          <a href="/storymanagement"
+            ><button type="button" class="btn btn-primary">
+              <i class="far fa-arrow-alt-circle-left"></i> BACK
+            </button></a
+          >
+          <hr />
+          <div class="rounded shadow-sm p-2">
+            {{> storyImage}}
+          </div>
+          <br />
+          <form class="addStoryForm">
+            <div class="form-group">
+              <label for="userType">User Type:</label>
+              <select class="form-control" id="userType" required>
+                <option value="Kids">Kids</option>
+                <option value="Adults">Adults</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contentTitle"> Content Title:</label>
+              <div class="checkAddedStoryTitleInput">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="contentTitle"
+                  maxlength="100"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="checkAddedStoryTitleInvalidMessage inputChecks">
+                <div class="error-message">Invalid Input</div>
+              </div>
+              <div class="checkAddedStoryTitleLengthMessage inputChecks">
+                <div class="error-message">
+                  Length Should Not Exceed 100 Characters
+                </div>
+              </div>
+              <div class="checkAddedStoryTitleNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  var toolbarOptions = [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ script: 'sub' }, { script: 'super' }],
+                    [{ indent: '-1' }, { indent: '+1' }],
+                    [{ direction: 'rtl' }],
+                    [{ size: ['small', false, 'large', 'huge'] }],
+                    [{ color: [] }, { background: [] }],
+                    [{ font: [] }],
+                    [{ align: [] }]
+                  ];
+
+                  var quill = new Quill('#story-editor', {
+                    modules: {
+                      toolbar: toolbarOptions
+                    },
+                    theme: 'snow'
+                  });
+                });
+              </script>
+              <label>Description:</label>
+              <div id="toolbar"></div>
+              <div class="checkAddedStoryDescInput">
+                <div id="story-editor"></div>
+              </div>
+              <div class="checkAddedStoryDescMessage inputChecks">
+                <div class="error-message">Please Enter Description</div>
+              </div>
+              <div class="checkAddedStoryDescNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#story-genre').select2();
+                });
+              </script>
+              <label for="story-genre">Genre:</label>
+              <select
+                class="form-control"
+                id="story-genre"
+                name="categories[]"
+                multiple="multiple"
+                required
+              >
+                {{# each categories}}
+                {{#if is_active}}
+                <option value="{{ Category_id }}">{{ Category_name }}</option>
+                {{/if}}
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#story-language').select2();
+                });
+              </script>
+              <label for="story-language">Language:</label>
+              <select
+                class="form-control"
+                id="story-language"
+                name="languages[]"
+                multiple="multiple"
+                required
+              >
+                {{#each languages}}
+                {{#if is_active}}
+                <option value="{{ language_id }}">{{ language }}</option>
+                {{/if}}
+                {{/each}}
+              </select>
+            </div>
+            <script>
+              $(document).ready(function() {
+                $.getScript(
+                  process.env.GOOGLE,
+                  function() {
+                    $.getScript(
+                      'https://cdnjs.cloudflare.com/ajax/libs/geocomplete/1.7.0/jquery.geocomplete.min.js',
+                      function() {
+                        $('#story-location')
+                          .geocomplete()
+                          .bind('geocode:result', function(event, result) {
+                            let data = JSON.stringify(result);
+                            data = JSON.parse(data);
+
+                            let address_components = data.address_components;
+                            let city = '';
+                            let state = '';
+                            let country = '';
+                            let lat = data.geometry.location.lat;
+                            let lng = data.geometry.location.lng;
+                            let formatted_address = data.formatted_address;
+                            let place_id = data.place_id;
+
+                            for (
+                              let i = 0, len = address_components.length;
+                              i < len;
+                              i++
+                            ) {
+                              let ac = result.address_components[i];
+                              if (ac.types.indexOf('locality') >= 0)
+                                city = ac.long_name;
+                              if (
+                                ac.types.indexOf(
+                                  'administrative_area_level_1'
+                                ) >= 0
+                              )
+                                state = ac.long_name;
+                              if (ac.types.indexOf('country') >= 0)
+                                country = ac.long_name;
+                            }
+
+                            Session.set('city', city);
+                            Session.set('state', state);
+                            Session.set('country', country);
+
+                            $('#storycity').val(city);
+                            $('#storystate').val(state);
+                            $('#storycountry').val(country);
+                            $('#storylat').val(lat);
+                            $('#storylng').val(lng);
+                            $('#storyformatted_address').val(formatted_address);
+                            $('#storyplace_id').val(place_id);
+                          });
+                      }
+                    );
+                  }
+                );
+              });
+            </script>
+            <div class="form-group">
+              <label for="story-location">Region:</label>
+              <div class="checkEditUserInput">
+                <input
+                  id="story-location"
+                  type="text"
+                  class="form-control"
+                  value="{{ formatted_address }}"
+                  aria-describedby="inputGroupPrepend"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <input
+                id="storycity"
+                name="storycity"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storystate"
+                name="storystate"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storycountry"
+                name="storycountry"
+                required=""
+                type="hidden"
+              />
+              <input id="storylat" name="storylat" required="" type="hidden" />
+              <input id="storylng" name="storylng" required="" type="hidden" />
+              <input
+                id="storyformatted_address"
+                name="storyformatted_address"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storyplace_id"
+                name="storyplace_id"
+                required=""
+                type="hidden"
+              />
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#story-tags').select2();
+                });
+              </script>
+              <label for="story-tags">Tags:</label>
+              <select
+                class="form-control"
+                id="story-tags"
+                name="tags[]"
+                multiple="multiple"
+                required
+              >
+                {{#each tags}}
+                {{#if is_active}}
+                <option value="{{ hash_tag_id }}">{{ hash_tag }}</option>
+                {{/if}}
+                {{/each}}
+              </select>
+            </div>
+            <div id="addStoryLineLoader" class="lineloader form-group noDisplay">
+              <div class="linebar"></div>
+          </div>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-danger btn-md btn-block"
+              value="Submit"
+            />
+          </form>
+          {{else}}
+          <div style="text-align: center">
+            <i
+              class="spinner fas fa-spinner mr-2 mb-3 mt-3 "
+              style="font-size:4em"
+            ></i>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{else}}
+  {{> noAccess}}
+  {{/if}}
+</template>

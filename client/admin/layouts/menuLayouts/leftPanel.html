@@ -1,0 +1,1228 @@
+<head>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <link
+    rel="stylesheet"
+    href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"
+  />
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"
+  ></script>
+  <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+  <script src="https://kit.fontawesome.com/00fae642f1.js"></script>
+  <script
+    type="text/javascript"
+    src="% google script source %"
+  ></script>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous"
+  />
+  <link rel="shortcut icon" type="image/png" href="./assets/images/logo.png" />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+</head>
+
+<template name="leftPanel">
+  {{#if Template.subscriptionsReady}}
+  {{#if currentUser }}
+  {{#if is_subadmin }}
+  {{#if is_active}}
+
+  <!-- common div -->
+  <div
+    class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
+  >
+    <!-- head nav -->
+    <div class="app-header header-shadow">
+      <div class="app-header__logo">
+        <a href="/"><div class="display-4" style="font-size: 2.0rem; color: black;">FolkLog</div></a>
+        <div class="header__pane ml-auto">
+          <div>
+            <button
+              type="button"
+              class="hamburger close-sidebar-btn hamburger--elastic"
+              data-class="closed-sidebar"
+            >
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="app-header__mobile-menu">
+        <div>
+          <button
+            type="button"
+            class="hamburger hamburger--elastic mobile-toggle-nav"
+          >
+            <span class="hamburger-box">
+              <span class="hamburger-inner"></span>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="app-header__menu">
+        <span>
+          <button
+            type="button"
+            class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav"
+          >
+            <span class="btn-icon-wrapper">
+              <i class="fa fa-ellipsis-v fa-w-6"></i>
+            </span>
+          </button>
+        </span>
+      </div>
+      <div class="app-header__content">
+        <div class="app-header-left">
+          <div class="search-wrapper">
+            <div class="input-holder">
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Type to search"
+              />
+              <button class="search-icon"><span></span></button>
+            </div>
+            <button class="close"></button>
+          </div>
+          <ul class="header-menu nav">
+            <li class="nav-item">
+              <a href="javascript:void(0);" class="nav-link">
+                <i class="nav-link-icon fa fa-database"> </i>
+                Statistics
+              </a>
+            </li>
+            <li class="btn-group nav-item">
+              <a href="javascript:void(0);" class="nav-link">
+                <i class="nav-link-icon fa fa-edit"></i>
+                Projects
+              </a>
+            </li>
+            <li class="dropdown nav-item">
+              <a href="javascript:void(0);" class="nav-link">
+                <i class="nav-link-icon fa fa-cog"></i>
+                Settings
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="app-header-right">
+          <div class="header-btn-lg pr-0">
+            <div class="widget-content p-0">
+              <div class="widget-content-wrapper">
+                <div class="widget-content-left">
+                  <div class="btn-group">
+                    <a
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      class="p-0 btn"
+                    >
+                      <img
+                        width="42"
+                        class="rounded-circle"
+                        src="assets/images/avatars/1.jpg"
+                        alt=""
+                      />
+                      <i class="fa fa-angle-down ml-2 opacity-8"></i>
+                    </a>
+                    <div
+                      tabindex="-1"
+                      role="menu"
+                      aria-hidden="true"
+                      class="dropdown-menu dropdown-menu-right"
+                    >
+                      <button type="button" tabindex="0" class="dropdown-item">
+                        User Account
+                      </button>
+                      <button type="button" tabindex="0" class="dropdown-item">
+                        Settings
+                      </button>
+                      <h6 tabindex="-1" class="dropdown-header">Header</h6>
+                      <button type="button" tabindex="0" class="dropdown-item">
+                        Actions
+                      </button>
+                      <div tabindex="-1" class="dropdown-divider"></div>
+                      <button type="button" tabindex="0" class="dropdown-item">
+                        Dividers
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="widget-content-left  ml-3 header-user-info">
+                  {{> loginButtons}}
+                </div>
+                <div class="widget-content-right header-user-info ml-3">
+                  <button
+                    type="button"
+                    class="btn-shadow p-1 btn btn-primary btn-sm show-toastr-example"
+                  >
+                    <i class="fa text-white fa-calendar pr-1 pl-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- common div -->
+    <div class="app-main">
+      <!-- side menu -->
+      <div class="app-sidebar sidebar-shadow">
+        <div class="app-header__logo">
+          <div class="display-4" style="font-size: 2.0rem; color: black;">FolkLog</div>
+          <div class="header__pane ml-auto">
+            <div>
+              <button
+                type="button"
+                class="hamburger close-sidebar-btn hamburger--elastic"
+                data-class="closed-sidebar"
+              >
+                <span class="hamburger-box">
+                  <span class="hamburger-inner"></span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="app-header__mobile-menu">
+          <div>
+            <button
+              type="button"
+              class="hamburger hamburger--elastic mobile-toggle-nav"
+            >
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="app-header__menu">
+          <span>
+            <button
+              type="button"
+              class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav"
+            >
+              <span class="btn-icon-wrapper">
+                <i class="fa fa-ellipsis-v fa-w-6"></i>
+              </span>
+            </button>
+          </span>
+        </div>
+        <div class="scrollbar-sidebar">
+          <div class="app-sidebar__inner">
+            <ul class="vertical-nav-menu">
+              <li class="mt-2  {{#if currentRouteIs 'dashboard'}}active{{/if}}">
+                <a href="/" class="menuLink">
+                  <i class="fas fa-tachometer-alt mr-2"></i>
+                  Dashboard
+                </a>
+              </li>
+              {{#each menuItems}}
+              {{#if isMS menu_name}}
+              <li class="mt-2">
+                <a href="#" class="menuLink" id="mastersettingsmenu">
+                  <i class="fas fa-cogs mr-2"></i>
+                  Master Settings
+                  <i
+                    id="mastersettingsToggle"
+                    class="fa fa-angle-right ml-2"
+                  ></i>
+                </a>
+                <ul>
+                  <li
+                    class="mt-2  {{#if currentRouteIs 'categories'}}active{{/if}}"
+                  >
+                    <a href="/mastersettings/categories">
+                      <i class="metismenu-icon"></i>
+                      Categories
+                    </a>
+                  </li>
+                  <li class="mt-2  {{#if currentRouteIs 'tags'}}active{{/if}}">
+                    <a href="/mastersettings/tags">
+                      <i class="metismenu-icon"></i>
+                      Tags
+                    </a>
+                  </li>
+                  <li
+                    class="mt-2  {{#if currentRouteIs 'languages'}}active{{/if}}"
+                  >
+                    <a href="/mastersettings/languages">
+                      <i class="metismenu-icon"></i>
+                      Languages
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              {{else}}
+              <li
+                class="mt-2 {{#if currentRouteIs menu_url}}active{{/if}}"
+              >
+                <a href="/{{ menu_url }}" class="menuLink">
+                  <i class="{{ menu_icon }} mr-2"></i>
+                  {{ menu_name }}
+                </a>
+              </li>
+              {{/if}}
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- common div -->
+      <div class="app-main__outer">
+        {{> Template.dynamic template=main}}
+        <!-- footer -->
+        <div class="app-wrapper-footer">
+          <div class="app-footer">
+            <div class="app-footer__inner">
+              <div class="app-footer-right">
+                <ul class="nav">
+                  <li class="nav-item">
+                    <a href="/cms/pages/aboutus" class="nav-link">
+                      About Us
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/cms/pages/termsandconditions" class="nav-link">
+                      Terms And Conditions
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/cms/pages/privacypolicy" class="nav-link">
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/cms/pages/contactus" class="nav-link">
+                      Contact Us
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+
+  <div
+    class="modal fade"
+    id="ManageCatModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ADD CATEGORY</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            data-dismiss="modal"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="addCatForm">
+          <div class="modal-body">
+            <label class="mt-2" for="addCat">NAME OF CATEGORY:</label>
+            <div class="checkAddedCatInput">
+              <input
+                id="addCat"
+                type="text"
+                class="form-control"
+                aria-describedby="inputGroupPrepend"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="checkAddedCatNumberMessage inputChecks">
+              <div class="error-message">Numbers are not allowed in input</div>
+            </div>
+            <div class="checkAddedCatInvalidMessage inputChecks">
+              <div class="error-message">Invalid Input</div>
+            </div>
+            <div class="checkAddedCatLengthMessage inputChecks">
+              <div class="error-message">
+                Length Should Not Exceed 30 Characters
+              </div>
+            </div>
+            <div class="checkAddedCatMessage inputChecks">
+              <div class="error-message">Category Name Must Be Unique</div>
+              <div class="success-message">
+                Category Name Saved Successfully
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <i
+              id="submitCatBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i
+            ><input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary "
+              value="ADD"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="ManageTagModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ADD TAG</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="addTagForm">
+          <div class="modal-body">
+            <label class="mt-2" for="addTag">NAME OF TAG:</label>
+            <div class="checkAddedTagInput">
+              <input
+                id="addTag"
+                type="text"
+                class="form-control"
+                aria-describedby="inputGroupPrepend"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="checkAddedTagNumberMessage inputChecks">
+              <div class="error-message">Numbers are not allowed in input</div>
+            </div>
+            <div class="checkAddedTagInvalidMessage inputChecks">
+              <div class="error-message">Invalid Input</div>
+            </div>
+            <div class="checkAddedTagLengthMessage inputChecks">
+              <div class="error-message">
+                Length Should Not Exceed 30 Characters
+              </div>
+            </div>
+            <div class="checkAddedTagMessage inputChecks">
+              <div class="error-message">Tag Name Must Be Unique</div>
+              <div class="success-message">
+                Tag Name Saved Successfully
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+
+            <i
+              id="submitTagBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="ADD"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="ManageLangModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ADD LANGUAGE</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="addLangForm">
+          <div class="modal-body">
+            <label class="mt-2" for="addTag">LANGUAGE NAME:</label>
+            <div class="checkAddedLangInput">
+              <input
+                id="addLang"
+                type="text"
+                class="form-control"
+                aria-describedby="inputGroupPrepend"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="checkAddedLangNumberMessage inputChecks">
+              <div class="error-message">Numbers are not allowed in input</div>
+            </div>
+            <div class="checkAddedLangInvalidMessage inputChecks">
+              <div class="error-message">Invalid Input</div>
+            </div>
+            <div class="checkAddedLangLengthMessage inputChecks">
+              <div class="error-message">
+                Length Should Not Exceed 30 Characters
+              </div>
+            </div>
+            <div class="checkAddedLangMessage inputChecks">
+              <div class="error-message">Language Name Must Be Unique</div>
+              <div class="success-message">
+                Language Name Saved Successfully
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+
+            <i
+              id="submitLangBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="ADD"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="EditCatModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">EDIT CATEGORY NAME</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            data-dismiss="modal"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="editCatNameForm">
+          <div class="modal-body">
+            <label class="mt-2" for="editCatName">CATEGORY NAME:</label>
+            {{#each getCurrentCat}}
+            <div class="checkEditCatInput">
+              <input
+                id="editCatName"
+                type="text"
+                class="form-control"
+                aria-describedby="inputGroupPrepend"
+                value="{{ Category_name }}"
+                autocomplete="off"
+                required
+              />
+            </div>
+            <div class="checkEditCatNumberMessage inputChecks">
+              <div class="error-message">Numbers are not allowed in input</div>
+            </div>
+            <div class="checkEditCatInvalidMessage inputChecks">
+              <div class="error-message">Invalid Input</div>
+            </div>
+            <div class="checkEditCatLengthMessage inputChecks">
+              <div class="error-message">
+                Length Should Not Exceed 30 Characters
+              </div>
+            </div>
+            {{/each}}
+            <div class="checkEditCatMessage inputChecks">
+              <div class="error-message">Category Name Must Be Unique</div>
+              <div class="success-message">
+                Category Name Edited Successfully
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+
+            <i
+              id="submitEditCatBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="SAVE"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="EditTagModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">EDIT TAG NAME</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            data-dismiss="modal"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="editTagNameForm">
+          <div class="modal-body">
+            <label class="mt-2" for="editTagName">TAG NAME:</label>
+            {{#each getCurrentTag}}
+            <div class="checkEditTagInput">
+              <input
+                id="editTagName"
+                type="text"
+                class="form-control"
+                aria-describedby="inputGroupPrepend"
+                value="{{ hash_tag }}"
+                autocomplete="off"
+                required
+              />
+            </div>
+            {{/each}}
+            <div class="checkEditTagNumberMessage inputChecks">
+              <div class="error-message">Numbers are not allowed in input</div>
+            </div>
+            <div class="checkEditTagInvalidMessage inputChecks">
+              <div class="error-message">Invalid Input</div>
+            </div>
+            <div class="checkEditTagLengthMessage inputChecks">
+              <div class="error-message">
+                Length Should Not Exceed 30 Characters
+              </div>
+            </div>
+            <div class="checkEditTagMessage inputChecks">
+              <div class="error-message">Tag Name Must Be Unique</div>
+              <div class="success-message">
+                Tag Name Edited Successfully
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+
+            <i
+              id="submitEditTagBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="SAVE"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="EditLangModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">EDIT LANGUAGE NAME</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            data-dismiss="modal"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="editLangNameForm">
+          <div class="modal-body">
+            <label class="mt-2" for="editLangName">LANGUAGE NAME:</label>
+            {{#each getCurrentLang}}
+            <div class="checkEditLangInput">
+              <input
+                id="editLangName"
+                type="text"
+                class="form-control"
+                aria-describedby="inputGroupPrepend"
+                value="{{ language }}"
+                autocomplete="off"
+                required
+              />
+            </div>
+            {{/each}}
+            <div class="checkEditLangNumberMessage inputChecks">
+              <div class="error-message">Numbers are not allowed in input</div>
+            </div>
+            <div class="checkEditLangInvalidMessage inputChecks">
+              <div class="error-message">Invalid Input</div>
+            </div>
+            <div class="checkEditLangLengthMessage inputChecks">
+              <div class="error-message">
+                Length Should Not Exceed 30 Characters
+              </div>
+            </div>
+            <div class="checkEditLangMessage inputChecks">
+              <div class="error-message">Language Name Must Be Unique</div>
+              <div class="success-message">
+                Language Name Edited Successfully
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+
+            <i
+              id="submitEditLangBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="SAVE"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="deleteUserModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">DELETE USER</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            data-dismiss="modal"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="deleteUserForm">
+          <div class="modal-body">
+            {{#each getCurrentUser}}
+            <h5>Are You Sure To Remove {{ name }}?</h5>
+            {{/each}}
+            <div class="checkDeleteUserMessage inputChecks">
+              <div class="error-message">
+                Something Went Wrong While Deleting User.
+              </div>
+              <div class="success-message">
+                User Deleted Successfully
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+
+            <i
+              id="submitDeleteUserBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="YES REMOVE"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="editUserModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">EDIT USER</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            data-dismiss="modal"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="editUserForm">
+          <div class="modal-body">
+            {{#each getCurrentUser}}
+            <div>
+              <label for="userName">User Name</label>
+              <div class="checkEditUserNameInput checkEditUserInput">
+                <input
+                  id="userName"
+                  type="text"
+                  class="form-control"
+                  value="{{ name }}"
+                  aria-describedby="inputGroupPrepend"
+                  maxlength="40"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="checkEditUserNameNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers are not allowed in input
+                </div>
+              </div>
+              <div class="checkEditUserNameInvalidMessage inputChecks">
+                <div class="error-message">Invalid Input</div>
+              </div>
+            </div>
+
+            <div>
+              <label class="mt-2" for="email">Email</label>
+              <input
+                id="email"
+                type="text"
+                class="form-control"
+                value="{{ email }}"
+                aria-describedby="inputGroupPrepend"
+                autocomplete="off"
+                required
+                readonly
+              />
+            </div>
+
+            <div>
+              <label class="mt-2" for="mobile_number">Mobile No.</label>
+              <div class="checkEditUserPhoneInput checkEditUserInput">
+                <input
+                  id="mobile_number"
+                  type="text"
+                  class="form-control"
+                  value="{{ mobile_number }}"
+                  aria-describedby="inputGroupPrepend"
+                  maxlength="10"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="checkEditUserPhoneNumberMessage inputChecks">
+                <div class="error-message">Only Numbers Are Allowed.</div>
+              </div>
+              <div
+                class="checkEditUserPhoneInvalidMessage checkEditUserMessage inputChecks"
+              >
+                <div class="error-message">Contact Number Not Valid</div>
+              </div>
+            </div>
+
+            <div>
+              <label class="mt-2" for="Location">Location</label>
+              <div class="checkEditUserInput">
+                <input
+                  id="Location"
+                  type="text"
+                  class="form-control"
+                  value="{{ formatted_address }}"
+                  aria-describedby="inputGroupPrepend"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <input id="newcity" name="newcity" required="" type="hidden" />
+              <input id="newstate" name="newstate" required="" type="hidden" />
+              <input
+                id="newcountry"
+                name="newcountry"
+                required=""
+                type="hidden"
+              />
+              <input id="newlat" name="newlat" required="" type="hidden" />
+              <input id="newlng" name="newlng" required="" type="hidden" />
+              <input
+                id="newformatted_address"
+                name="newformatted_address"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="newplace_id"
+                name="newplace_id"
+                required=""
+                type="hidden"
+              />
+            </div>
+
+            <div class="checkEditUserMessage inputChecks">
+              <div class="success-message">
+                User Edited Successfully!
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <i
+              id="submitEditUserBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i
+            ><input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="SAVE"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="AddUserModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ADD USER</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            data-dismiss="modal"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="addUserForm">
+          <div class="modal-body">
+            <div>
+              <label for="newUserName">User Name</label>
+              <div class="checkAddUserNameInput checkAddUserInput">
+                <input
+                  id="newUserName"
+                  type="text"
+                  class="form-control"
+                  value=""
+                  aria-describedby="inputGroupPrepend"
+                  maxlength="40"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="checkAddUserNameNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers are not allowed in input
+                </div>
+              </div>
+              <div class="checkAddUserNameInvalidMessage inputChecks">
+                <div class="error-message">Invalid Input</div>
+              </div>
+            </div>
+
+            <div>
+              <label class="mt-2" for="newEmail">Email</label>
+              <div class="checkAddUserEmailInput checkAddUserInput">
+                <input
+                  id="newEmail"
+                  type="email"
+                  class="form-control"
+                  value=""
+                  aria-describedby="inputGroupPrepend"
+                  maxlength="40"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="checkAddUserEmailInvalidMessage inputChecks">
+                <div class="error-message">Invalid Email Id.</div>
+              </div>
+              <div class="checkAddUserEmailMessage inputChecks">
+                <div class="error-message">Email Id Should Be Unique.</div>
+              </div>
+            </div>
+
+            <div>
+              <label class="mt-2" for="newMobile_number">Mobile No.</label>
+              <div class="checkAddUserPhoneInput checkAddUserInput">
+                <input
+                  id="newMobile_number"
+                  type="text"
+                  class="form-control"
+                  value=""
+                  aria-describedby="inputGroupPrepend"
+                  maxlength="10"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="checkAddUserPhoneInvalidMessage inputChecks">
+                <div class="error-message">Only Numbers Are Allowed.</div>
+              </div>
+              <div class="checkAddUserPhoneMessage inputChecks">
+                <div class="error-message">Contact Number Not Valid</div>
+              </div>
+            </div>
+
+            <div>
+              <label class="mt-2" for="newLocation">Location</label>
+              <div class="checkAddUserInput">
+                <input
+                  id="newLocation"
+                  type="text"
+                  class="form-control"
+                  value=""
+                  aria-describedby="inputGroupPrepend"
+                  autocomplete="off"
+                  required
+                />
+                <input id="city" name="city" required="" type="hidden" />
+                <input id="state" name="state" required="" type="hidden" />
+                <input id="country" name="country" required="" type="hidden" />
+                <input id="lat" name="lat" required="" type="hidden" />
+                <input id="lng" name="lng" required="" type="hidden" />
+                <input
+                  id="formatted_address"
+                  name="formatted_address"
+                  required=""
+                  type="hidden"
+                />
+                <input
+                  id="place_id"
+                  name="place_id"
+                  required=""
+                  type="hidden"
+                />
+              </div>
+            </div>
+
+            <div class="checkAddUserMessage inputChecks">
+              <div class="success-message">
+                User Added Successfully!
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="mb-2 mr-2 mt-3 btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+
+            <i
+              id="submitAddUserBtn"
+              class="spinner fas fa-spinner mr-2 noDisplay"
+            ></i
+            ><input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-primary"
+              value="ADD"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="ViewAddMediaModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div id="ViewAddMediaModalContent" class="modal-content"></div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="ViewEditMediaModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div id="ViewEditMediaModalContent" class="modal-content"></div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="ViewMediaModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div id="ViewMediaModalContent" class="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="./js/main.js"></script>
+  {{#each menuItems}}
+  {{#if isMS menu_name}}
+  <script>
+    document
+      .getElementById('mastersettingsmenu')
+      .addEventListener('click', e => {
+        $('#mastersettingsToggle').toggleClass('fas fa-chevron-down');
+        $('#mastersettingsToggle').toggleClass('fa fa-angle-right');
+      });
+  </script>
+  {{/if}}
+  {{/each}}
+  <!-- End Modal -->
+  {{else}}
+  {{> noAccess}}
+  {{/if}}
+  {{else}}
+  {{> noAccess}}
+  {{/if}}
+  {{else}}
+  {{> Login}}
+  {{/if}}
+  {{else}}
+  <div style="text-align: center" class="mt-3">
+    <i
+      id="leftPanelLoader"
+      class="spinner fas fa-atom mr-2 mb-3 mt-3 "
+      style="font-size:6em; color:#aed9f5; "
+    ></i>
+    <h3 class="display-5">Loading...</h3>
+  </div>
+  {{/if}}
+</template>

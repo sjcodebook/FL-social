@@ -1,0 +1,321 @@
+<template name="addMedia">
+  {{#if is_allowed 'Media Management'}}
+  <div class="app-main__inner">
+    <div class="app-page-title  contentCenter">
+      <div class="page-title-wrapper inlineContent">
+        <div class="page-title-heading">
+          <i class="fa fa-plus-square mr-2"></i>
+          ADD VIDEO / AUDIO
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          {{#if Template.subscriptionsReady}}
+          <a href="/audiovideomanagement"
+            ><button type="button" class="btn btn-primary">
+              <i class="far fa-arrow-alt-circle-left"></i> BACK
+            </button></a
+          >
+          <hr />
+          <form class="addAVForm">
+            <div class="form-group">
+              <label for="mediaType">Content Type:</label>
+              <select class="form-control" id="mediaType" required>
+                <option value="Video">Video</option>
+                <option value="Audio">Audio</option>
+              </select>
+            </div>
+
+            <label for="sourceURL"> Content Source:</label>
+            <div class="checkAddedMediaURLInput">
+              <div class="input-group ">
+                <input
+                  id="sourceURL"
+                  type="text"
+                  class="form-control"
+                  placeholder="URL"
+                  aria-label="URL"
+                  aria-describedby="ViewAddMediaBtn"
+                  autocomplete="off"
+                  required
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="ViewAddMediaBtn"
+                  >
+                    <i class="fas fa-play"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="checkAddedMediaURLInvalidMessage inputChecks">
+              <div class="error-message">Invalid URL</div>
+            </div>
+            <div id="downaddMediaPrev"></div>
+
+            <div class="form-group mt-3">
+              <label for="mediaUserType">User Type:</label>
+              <select class="form-control" id="mediaUserType" required>
+                <option value="Kids">Kids</option>
+                <option value="Adults">Adults</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="mediaContentTitle"> Content Title:</label>
+              <div class="checkAddedMediaTitleInput">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="mediaContentTitle"
+                  maxlength="100"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <div class="checkAddedMediaTitleInvalidMessage inputChecks">
+                <div class="error-message">Invalid Input</div>
+              </div>
+              <div class="checkAddedMediaTitleLengthMessage inputChecks">
+                <div class="error-message">
+                  Length Should Not Exceed 100 Characters
+                </div>
+              </div>
+              <div class="checkAddedMediaTitleNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  var toolbarOptions = [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ script: 'sub' }, { script: 'super' }],
+                    [{ indent: '-1' }, { indent: '+1' }],
+                    [{ direction: 'rtl' }],
+                    [{ size: ['small', false, 'large', 'huge'] }],
+                    [{ color: [] }, { background: [] }],
+                    [{ font: [] }],
+                    [{ align: [] }]
+                  ];
+
+                  var quill = new Quill('#media-editor', {
+                    modules: {
+                      toolbar: toolbarOptions
+                    },
+                    theme: 'snow'
+                  });
+                });
+              </script>
+              <label>Description:</label>
+              <div id="toolbar"></div>
+              <div class="checkAddedMediaDescInput">
+                <div id="media-editor"></div>
+              </div>
+              <div class="checkAddedMediaDescMessage inputChecks">
+                <div class="error-message">Please Enter Description</div>
+              </div>
+              <div class="checkAddedMediaDescNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#media-genre').select2();
+                });
+              </script>
+              <label for="media-genre">Genre:</label>
+              <select
+                class="form-control"
+                id="media-genre"
+                name="categories[]"
+                multiple="multiple"
+                required
+              >
+                {{# each categories}}
+                {{#if is_active}}
+                <option value="{{ Category_id }}">{{ Category_name }}</option>
+                {{/if}}
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#media-language').select2();
+                });
+              </script>
+              <label for="media-language">Language:</label>
+              <select
+                class="form-control"
+                id="media-language"
+                name="languages[]"
+                multiple="multiple"
+                required
+              >
+                {{#each languages}}
+                {{#if is_active}}
+                <option value="{{ language_id }}">{{ language }}</option>
+                {{/if}}
+                {{/each}}
+              </select>
+            </div>
+            <script>
+              $(document).ready(function() {
+                $.getScript(process.env.GOOGLE, function() {
+                  $.getScript(
+                    'https://cdnjs.cloudflare.com/ajax/libs/geocomplete/1.7.0/jquery.geocomplete.min.js',
+                    function() {
+                      $('#AV-location')
+                        .geocomplete()
+                        .bind('geocode:result', function(event, result) {
+                          let data = JSON.stringify(result);
+                          data = JSON.parse(data);
+
+                          let address_components = data.address_components;
+                          let city = '';
+                          let state = '';
+                          let country = '';
+                          let lat = data.geometry.location.lat;
+                          let lng = data.geometry.location.lng;
+                          let formatted_address = data.formatted_address;
+                          let place_id = data.place_id;
+
+                          for (
+                            let i = 0, len = address_components.length;
+                            i < len;
+                            i++
+                          ) {
+                            let ac = result.address_components[i];
+                            if (ac.types.indexOf('locality') >= 0)
+                              city = ac.long_name;
+                            if (
+                              ac.types.indexOf('administrative_area_level_1') >=
+                              0
+                            )
+                              state = ac.long_name;
+                            if (ac.types.indexOf('country') >= 0)
+                              country = ac.long_name;
+                          }
+
+                          Session.set('city', city);
+                          Session.set('state', state);
+                          Session.set('country', country);
+
+                          $('#mediacity').val(city);
+                          $('#mediastate').val(state);
+                          $('#mediacountry').val(country);
+                          $('#medialat').val(lat);
+                          $('#medialng').val(lng);
+                          $('#mediaformatted_address').val(formatted_address);
+                          $('#mediaplace_id').val(place_id);
+                        });
+                    }
+                  );
+                });
+              });
+            </script>
+            <div class="form-group">
+              <label for="AV-location">Region:</label>
+              <input
+                id="AV-location"
+                type="text"
+                class="form-control"
+                aria-describedby="inputGroupPrepend"
+                autocomplete="off"
+                required
+              />
+              <input
+                id="mediacity"
+                name="mediacity"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediastate"
+                name="mediastate"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediacountry"
+                name="mediacountry"
+                required=""
+                type="hidden"
+              />
+              <input id="medialat" name="medialat" required="" type="hidden" />
+              <input id="medialng" name="medialng" required="" type="hidden" />
+              <input
+                id="mediaformatted_address"
+                name="mediaformatted_address"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediaplace_id"
+                name="mediaplace_id"
+                required=""
+                type="hidden"
+              />
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#media-tags').select2();
+                });
+              </script>
+              <label for="media-tags">Tags:</label>
+              <select
+                class="form-control"
+                id="media-tags"
+                name="tags[]"
+                multiple="multiple"
+                required
+              >
+                {{#each tags}}
+                {{#if is_active}}
+                <option value="{{ hash_tag_id }}">{{ hash_tag }}</option>
+                {{/if}}
+                {{/each}}
+              </select>
+            </div>
+            <div
+              id="addMediaLineLoader"
+              class="lineloader form-group noDisplay"
+            >
+              <div class="linebar"></div>
+            </div>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-danger btn-md btn-block"
+              value="Submit"
+            />
+          </form>
+          {{else}}
+          <div style="text-align: center">
+            <i
+              id="editCmsLoader"
+              class="spinner fas fa-spinner mr-2 mb-3 mt-3 "
+              style="font-size:4em"
+            ></i>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+  {{else}}
+  {{> noAccess}}
+  {{/if}}
+</template>

@@ -1,0 +1,353 @@
+<template name="editMedia">
+    {{#if is_allowed 'Media Management'}}
+  <div class="app-main__inner">
+    <div class="app-page-title  contentCenter">
+      <div class="page-title-wrapper inlineContent">
+        <div class="page-title-heading">
+          <i class="fas fa-pencil-alt mr-2"></i>
+          EDIT MEDIA
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          {{#if Template.subscriptionsReady}}
+          <a href="/audiovideomanagement"
+            ><button type="button" class="btn btn-primary">
+              <i class="far fa-arrow-alt-circle-left"></i> BACK
+            </button></a
+          >
+          <hr />
+          {{#each editMediaById }}
+          <form class="editMediaForm">
+            <div class="form-group">
+              <label for="editMediaType">Content Type:</label>
+              <select class="form-control" id="editMediaType" required>
+                <option value="Video" id="Video">Video</option>
+                <option value="Audio" id="Audio">Audio</option>
+              </select>
+            </div>
+
+            <label for="editSourceURL"> Content Source:</label>
+            <div class="checkEditMediaURLInput">
+              <div class="input-group ">
+                <input
+                  id="editSourceURL"
+                  type="text"
+                  class="form-control"
+                  placeholder="URL"
+                  aria-label="URL"
+                  aria-describedby="ViewEditMediaBtn"
+                  autocomplete="off"
+                  value="{{ Source }}"
+                  required
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="ViewEditMediaBtn"
+                  >
+                    <i class="fas fa-play"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="checkEditMediaURLInvalidMessage inputChecks">
+              <div class="error-message">Invalid URL</div>
+            </div>
+            <div id="downeditMediaPrev"></div>
+
+            <div class="form-group mt-3">
+              <label for="editMediaUserType">User Type:</label>
+              <select class="form-control" id="editMediaUserType" required>
+                <option value="Kids" id="Kids">Kids</option>
+                <option value="Adults" id="Adults">Adults</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="editMediaContentTitle"> Content Title:</label>
+              <div class="checkEditMediaTitleInput">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editMediaContentTitle"
+                  maxlength="100"
+                  autocomplete="off"
+                  value="{{ Title }}"
+                  required
+                />
+              </div>
+              <div class="checkEditMediaTitleInvalidMessage inputChecks">
+                <div class="error-message">Invalid Input</div>
+              </div>
+              <div class="checkEditMediaTitleLengthMessage inputChecks">
+                <div class="error-message">
+                  Length Should Not Exceed 100 Characters
+                </div>
+              </div>
+              <div class="checkEditMediaTitleNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  var toolbarOptions = [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ script: 'sub' }, { script: 'super' }],
+                    [{ indent: '-1' }, { indent: '+1' }],
+                    [{ direction: 'rtl' }],
+                    [{ size: ['small', false, 'large', 'huge'] }],
+                    [{ color: [] }, { background: [] }],
+                    [{ font: [] }],
+                    [{ align: [] }]
+                  ];
+
+                  var quill = new Quill('#edit-media-editor', {
+                    modules: {
+                      toolbar: toolbarOptions
+                    },
+                    theme: 'snow'
+                  });
+                });
+              </script>
+              <label>Description:</label>
+              <div id="toolbar"></div>
+              <div class="checkEditMediaDescInput">
+                <div id="edit-media-editor">{{{ Description }}}</div>
+              </div>
+              <div class="checkEditMediaDescMessage inputChecks">
+                <div class="error-message">Please Enter Description</div>
+              </div>
+              <div class="checkEditMediaDescNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#editMedia-genre').select2();
+                });
+              </script>
+              <label for="editMedia-genre">Genre:</label>
+              <select
+                class="form-control"
+                id="editMedia-genre"
+                name="categories[]"
+                multiple="multiple"
+                required
+              >
+                {{#each MasterCat}}
+                <option selected>{{ Category_name }}</option>
+                {{/each}}
+                {{#each categories}}
+                {{#each key in (keys this)}}
+                <option> {{ key }}</option>
+                {{/each}}
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#editMedia-language').select2();
+                });
+              </script>
+              <label for="editMedia-language">Language:</label>
+              <select
+                class="form-control"
+                id="editMedia-language"
+                name="languages[]"
+                multiple="multiple"
+                required
+              >
+                {{#each MasterLang}}
+                <option selected>{{ language }}</option>
+                {{/each}}
+                {{#each languages}}
+                {{#each key in (keys this)}}
+                <option> {{ key }}</option>
+                {{/each}}
+                {{/each}}
+              </select>
+            </div>
+            <script>
+              $(document).ready(function() {
+                $.getScript(
+                  process.env.GOOGLE,
+                  function() {
+                    $.getScript(
+                      'https://cdnjs.cloudflare.com/ajax/libs/geocomplete/1.7.0/jquery.geocomplete.min.js',
+                      function() {
+                        $('#media-edit-location')
+                          .geocomplete()
+                          .bind('geocode:result', function(event, result) {
+                            let data = JSON.stringify(result);
+                            data = JSON.parse(data);
+
+                            let address_components = data.address_components;
+                            let city = '';
+                            let state = '';
+                            let country = '';
+                            let lat = data.geometry.location.lat;
+                            let lng = data.geometry.location.lng;
+                            let formatted_address = data.formatted_address;
+                            let place_id = data.place_id;
+
+                            for (
+                              let i = 0, len = address_components.length;
+                              i < len;
+                              i++
+                            ) {
+                              let ac = result.address_components[i];
+                              if (ac.types.indexOf('locality') >= 0)
+                                city = ac.long_name;
+                              if (
+                                ac.types.indexOf(
+                                  'administrative_area_level_1'
+                                ) >= 0
+                              )
+                                state = ac.long_name;
+                              if (ac.types.indexOf('country') >= 0)
+                                country = ac.long_name;
+                            }
+
+                            Session.set('city', city);
+                            Session.set('state', state);
+                            Session.set('country', country);
+
+                            $('#mediaEditcity').val(city);
+                            $('#mediaEditstate').val(state);
+                            $('#mediaEditcountry').val(country);
+                            $('#mediaEditlat').val(lat);
+                            $('#mediaEditlng').val(lng);
+                            $('#mediaEditformatted_address').val(
+                              formatted_address
+                            );
+                            $('#mediaEditplace_id').val(place_id);
+                          });
+                      }
+                    );
+                  }
+                );
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="media-edit-location">Region:</label>
+              <div class="checkEditUserInput">
+                <input
+                  id="media-edit-location"
+                  type="text"
+                  class="form-control"
+                  value="{{ formatted_address }}"
+                  aria-describedby="inputGroupPrepend"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <input
+                id="mediaEditcity"
+                name="mediaEditcity"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediaEditstate"
+                name="mediaEditstate"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediaEditcountry"
+                name="mediaEditcountry"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediaEditlat"
+                name="mediaEditlat"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediaEditlng"
+                name="mediaEditlng"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediaEditformatted_address"
+                name="mediaEditformatted_address"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="mediaEditplace_id"
+                name="mediaEditplace_id"
+                required=""
+                type="hidden"
+              />
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#editMedia-tags').select2();
+                });
+              </script>
+              <label for="editMedia-tags">Tags:</label>
+              <select
+                class="form-control"
+                id="editMedia-tags"
+                name="tags[]"
+                multiple="multiple"
+                required
+              >
+                {{#each MasterTag}}
+                <option selected>{{ hash_tag }}</option>
+                {{/each}}
+                {{#each tags}}
+                {{#each key in (keys this)}}
+                <option> {{ key }}</option>
+                {{/each}}
+                {{/each}}
+              </select>
+            </div>
+            <div id="editMediaLineLoader" class="lineloader form-group noDisplay">
+              <div class="linebar"></div>
+          </div>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-danger btn-md btn-block"
+              value="Submit"
+            />
+          </form>
+          {{/each}}
+          {{else}}
+          <div style="text-align: center">
+            <i
+              class="spinner fas fa-spinner mr-2 mb-3 mt-3 "
+              style="font-size:4em"
+            ></i>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+  {{else}}
+  {{> noAccess}}
+  {{/if}}
+</template>

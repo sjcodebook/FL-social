@@ -1,0 +1,347 @@
+<template name="editStory">
+    {{#if is_allowed 'Story Management'}}
+  <div class="app-main__inner">
+    <div class="app-page-title  contentCenter">
+      <div class="page-title-wrapper inlineContent">
+        <div class="page-title-heading">
+          <i class="fas fa-pencil-alt mr-2"></i>
+          EDIT STORY
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="main-card mb-3 card">
+        <div class="card-body">
+          {{#if Template.subscriptionsReady}}
+          <a href="/storymanagement"
+            ><button type="button" class="btn btn-primary">
+              <i class="far fa-arrow-alt-circle-left"></i> BACK
+            </button></a
+          >
+          <hr />
+          {{#each editStoryById }}
+          <div class="rounded shadow-sm p-2">
+            <div class="storyImgContainer" style="width: 100%">
+              <img src="/assets/images/upload.png" alt="" class="default-img" />
+              <form class="edit-story-image" enctype="multipart/form-data">
+                <label class="story-title" for="storyImage"
+                  >Choose Banner Image</label
+                >
+                <span id="filename"></span>
+                <div class="overlay"></div>
+                <div class="story-upload-button">
+                  <input
+                    type="file"
+                    name="storyImage"
+                    id="storyImage"
+                    class="black storyImage"
+                    required
+                  />
+                  <br />
+                </div>
+
+                <div class="story-upload-button-2">
+                  <button
+                    type="button"
+                    value="Upload Photo"
+                    id="storyImg-btn"
+                    class="btn btn-sm btn-primary"
+                  >
+                    Upload Photo
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <br />
+          <form class="editStoryForm">
+            <div class="form-group">
+              <label for="editUserType">User Type:</label>
+              <select class="form-control" id="editUserType" required>
+                <option value="Kids" id="Kids">Kids</option>
+                <option value="Adults" id="Adults">Adults</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editContentTitle"> Content Title:</label>
+              <div class="checkEditStoryTitleInput">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editContentTitle"
+                  maxlength="100"
+                  autocomplete="off"
+                  value="{{ Title }}"
+                  required
+                />
+              </div>
+              <div class="checkEditStoryTitleInvalidMessage inputChecks">
+                <div class="error-message">Invalid Input</div>
+              </div>
+              <div class="checkEditStoryTitleLengthMessage inputChecks">
+                <div class="error-message">
+                  Length Should Not Exceed 100 Characters
+                </div>
+              </div>
+              <div class="checkEditStoryTitleNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  var toolbarOptions = [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ script: 'sub' }, { script: 'super' }],
+                    [{ indent: '-1' }, { indent: '+1' }],
+                    [{ direction: 'rtl' }],
+                    [{ size: ['small', false, 'large', 'huge'] }],
+                    [{ color: [] }, { background: [] }],
+                    [{ font: [] }],
+                    [{ align: [] }]
+                  ];
+
+                  var quill = new Quill('#story-editor', {
+                    modules: {
+                      toolbar: toolbarOptions
+                    },
+                    theme: 'snow'
+                  });
+                });
+              </script>
+              <label>Description:</label>
+              <div id="toolbar"></div>
+              <div class="checkEditStoryDescInput">
+                <div id="story-editor">{{{ Description }}}</div>
+              </div>
+              <div class="checkEditStoryDescMessage inputChecks">
+                <div class="error-message">Please Enter Description</div>
+              </div>
+              <div class="checkEditStoryDescNumberMessage inputChecks">
+                <div class="error-message">
+                  Numbers Are Not Allowed In Input
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#editStory-genre').select2();
+                });
+              </script>
+              <label for="editStory-genre">Genre:</label>
+              <select
+                class="form-control"
+                id="editStory-genre"
+                name="categories[]"
+                multiple="multiple"
+                required
+              >
+                {{#each MasterCat}}
+                <option selected>{{ Category_name }}</option>
+                {{/each}}
+                {{#each categories}}
+                {{#each key in (keys this)}}
+                <option> {{ key }}</option>
+                {{/each}}
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#editStory-language').select2();
+                });
+              </script>
+              <label for="editStory-language">Language:</label>
+              <select
+                class="form-control"
+                id="editStory-language"
+                name="languages[]"
+                multiple="multiple"
+                required
+              >
+                {{#each MasterLang}}
+                <option selected>{{ language }}</option>
+                {{/each}}
+                {{#each languages}}
+                {{#each key in (keys this)}}
+                <option> {{ key }}</option>
+                {{/each}}
+                {{/each}}
+              </select>
+            </div>
+            <script>
+              $(document).ready(function() {
+                $.getScript(
+                  process.env.GOOGLE,
+                  function() {
+                    $.getScript(
+                      'https://cdnjs.cloudflare.com/ajax/libs/geocomplete/1.7.0/jquery.geocomplete.min.js',
+                      function() {
+                        $('#story-edit-location')
+                          .geocomplete()
+                          .bind('geocode:result', function(event, result) {
+                            let data = JSON.stringify(result);
+                            data = JSON.parse(data);
+
+                            let address_components = data.address_components;
+                            let city = '';
+                            let state = '';
+                            let country = '';
+                            let lat = data.geometry.location.lat;
+                            let lng = data.geometry.location.lng;
+                            let formatted_address = data.formatted_address;
+                            let place_id = data.place_id;
+
+                            for (
+                              let i = 0, len = address_components.length;
+                              i < len;
+                              i++
+                            ) {
+                              let ac = result.address_components[i];
+                              if (ac.types.indexOf('locality') >= 0)
+                                city = ac.long_name;
+                              if (
+                                ac.types.indexOf(
+                                  'administrative_area_level_1'
+                                ) >= 0
+                              )
+                                state = ac.long_name;
+                              if (ac.types.indexOf('country') >= 0)
+                                country = ac.long_name;
+                            }
+
+                            Session.set('city', city);
+                            Session.set('state', state);
+                            Session.set('country', country);
+
+                            $('#storyEditcity').val(city);
+                            $('#storyEditstate').val(state);
+                            $('#storyEditcountry').val(country);
+                            $('#storyEditlat').val(lat);
+                            $('#storyEditlng').val(lng);
+                            $('#storyEditformatted_address').val(
+                              formatted_address
+                            );
+                            $('#storyEditplace_id').val(place_id);
+                          });
+                      }
+                    );
+                  }
+                );
+              });
+            </script>
+
+            <div class="form-group">
+              <label for="story-edit-location">Region:</label>
+              <div class="checkEditUserInput">
+                <input
+                  id="story-edit-location"
+                  type="text"
+                  class="form-control"
+                  value="{{ formatted_address }}"
+                  aria-describedby="inputGroupPrepend"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <input
+                id="storyEditcity"
+                name="storyEditcity"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storyEditstate"
+                name="storyEditstate"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storyEditcountry"
+                name="storyEditcountry"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storyEditlat"
+                name="storyEditlat"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storyEditlng"
+                name="storyEditlng"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storyEditformatted_address"
+                name="storyEditformatted_address"
+                required=""
+                type="hidden"
+              />
+              <input
+                id="storyEditplace_id"
+                name="storyEditplace_id"
+                required=""
+                type="hidden"
+              />
+            </div>
+            <div class="form-group">
+              <script>
+                $(document).ready(function() {
+                  $('#editStory-tags').select2();
+                });
+              </script>
+              <label for="editStory-tags">Tags:</label>
+              <select
+                class="form-control"
+                id="editStory-tags"
+                name="tags[]"
+                multiple="multiple"
+                required
+              >
+                {{#each MasterTag}}
+                <option selected>{{ hash_tag }}</option>
+                {{/each}}
+                {{#each tags}}
+                {{#each key in (keys this)}}
+                <option> {{ key }}</option>
+                {{/each}}
+                {{/each}}
+              </select>
+            </div>
+            <div id="editStoryLineLoader" class="lineloader form-group noDisplay">
+              <div class="linebar"></div>
+          </div>
+            <input
+              type="submit"
+              class="mb-2 mr-2 mt-3 btn btn-danger btn-md btn-block"
+              value="Submit"
+            />
+          </form>
+          {{/each}}
+          {{else}}
+          <div style="text-align: center">
+            <i
+              class="spinner fas fa-spinner mr-2 mb-3 mt-3 "
+              style="font-size:4em"
+            ></i>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+ {{else}}
+ {{> noAccess}}
+ {{/if}}
+</template>
